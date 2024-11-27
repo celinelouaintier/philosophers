@@ -7,6 +7,15 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+typedef struct s_philo
+{
+    int				id;
+    int				eat_count;
+    long long		last_eat;
+    pthread_t		thread;
+    struct s_table	*table;
+}					t_philo;
+
 typedef struct s_table
 {
     int				philo_count;
@@ -21,14 +30,10 @@ typedef struct s_table
     t_philo			*philos;
 }					t_table;
 
-typedef struct s_philo
-{
-    int				id;
-    int				eat_count;
-    long long		last_eat;
-    pthread_t		thread;
-    struct s_table	*table;
-}					t_philo;
+
+int	init_all(int ac, char **av, t_table *table);
+int	ft_atoi(const char *nptr);
+int	get_time(void);
 
 
 #endif

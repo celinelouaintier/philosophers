@@ -2,7 +2,7 @@
 
 NAME	= philo
 
-SRCS 	= main.c states.c utils.c threads.c init.c
+SRCS 	= main.c utils.c threads.c init.c
 SRCS_DIR = srcs/
 SRC 	= ${addprefix ${SRCS_DIR}, ${SRCS}}
 OBJS 	= ${SRC:.c=.o}
