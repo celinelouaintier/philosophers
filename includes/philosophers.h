@@ -24,16 +24,20 @@ typedef struct s_table
     int				time_to_sleep;
     int				must_eat;
     int				dead;
-    long long		start;
+    int				start;
     pthread_mutex_t	*forks;
     pthread_mutex_t	print;
     t_philo			*philos;
 }					t_table;
 
 
-int	init_all(int ac, char **av, t_table *table);
-int	ft_atoi(const char *nptr);
-int	get_time(void);
-
+int			init_all(int ac, char **av, t_table *table);
+int			ft_atoi(const char *nptr);
+long long	get_time(void);
+void		take_forks(t_philo *philo);
+void		eat(t_philo *philo);
+void		put_forks(t_philo *philo);
+void		ft_sleep(t_philo *philo);
+int			start_simulation(t_table *table);
 
 #endif

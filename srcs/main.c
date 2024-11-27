@@ -29,6 +29,7 @@ void	print_philos(t_table *table)
 		printf("T_to_eat : %d\n", table->time_to_eat);
 		printf("T_to_sleep : %d\n", table->time_to_sleep);
 		printf("Must_eat : %d\n", table->must_eat);
+		printf("Start : %d\n", table->start);
 	}
 }
 
@@ -40,9 +41,9 @@ int main(int ac, char **av)
         return (printf("Error: wrong number of arguments\n"));
     if (init_all(ac, av, &table))
         return (printf("Error: initialization failed\n"));
-	else
-		print_philos(&table);
-    // if (start_simulation(&table))
-    //     return (printf("Error: simulation failed\n"));
+	// else
+	// 	print_philos(&table);
+    if (start_simulation(&table))
+        return (printf("Error: simulation failed\n"));
     return (0);
 }

@@ -50,12 +50,11 @@ static int	init_table(t_table *table, int ac, char **av)
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
 	table->time_to_sleep = ft_atoi(av[4]);
+	table->must_eat = -1;
 	if (ac == 6)
 		table->must_eat = ft_atoi(av[5]);
-	else
-		table->must_eat = -1;
 	table->dead = 0;
-	table->start = get_time();
+	table->start = 0;
 	table->forks = malloc(sizeof(pthread_mutex_t) * table->philo_count);
 	if (!table->forks)
 		return (1);
