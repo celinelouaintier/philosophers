@@ -25,6 +25,7 @@ typedef struct s_table
     int				must_eat;
     int				dead;
     int				start;
+    pthread_mutex_t dead_lock;
     pthread_mutex_t	*forks;
     pthread_mutex_t	print;
     t_philo			*philos;
@@ -33,11 +34,13 @@ typedef struct s_table
 
 int			init_all(int ac, char **av, t_table *table);
 int			ft_atoi(const char *nptr);
-long long	get_time(void);
+long long	get_time();
 void		take_forks(t_philo *philo);
 void		eat(t_philo *philo);
 void		put_forks(t_philo *philo);
 void		ft_sleep(t_philo *philo);
 int			start_simulation(t_table *table);
+void        precise_usleep(long long time_in_ms, t_table *table);
+void		action_print(t_table *table, int id, char *string);
 
 #endif

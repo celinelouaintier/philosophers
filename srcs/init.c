@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: clouaint <clouaint@student.42.fr>          #+#  +:+       +#+        */
+/*   By: clouaint <clouaint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-27 10:29:30 by clouaint          #+#    #+#             */
-/*   Updated: 2024-11-27 10:29:30 by clouaint         ###   ########.fr       */
+/*   Created: 2024/11/27 10:29:30 by clouaint          #+#    #+#             */
+/*   Updated: 2024/12/02 17:59:15 by clouaint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	init_philos(t_table *table)
 	{
 		table->philos[i].id = i + 1;
 		table->philos[i].eat_count = 0;
-		table->philos[i].last_eat = table->start;
+		table->philos[i].last_eat = 0;
 		table->philos[i].table = table;
 		i++;
 	}
@@ -43,9 +43,6 @@ static void init_mutex(t_table *table)
 
 static int	init_table(t_table *table, int ac, char **av)
 {
-	int	i;
-
-	i = 0;
 	table->philo_count = ft_atoi(av[1]);
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
@@ -59,10 +56,12 @@ static int	init_table(t_table *table, int ac, char **av)
 	if (!table->forks)
 		return (1);
 	init_mutex(table);
+	pthread_mutex_init(&table->dead_lock, NULL);
 	table->philos = malloc(sizeof(t_philo) * table->philo_count);
 	if (!table->philos)
 		return (1);
 	init_philos(table);
+	pthread_mutex_destroy(&table->dead_lock);
 	return (0);
 }
 

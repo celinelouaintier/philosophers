@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   states.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: clouaint <clouaint@student.42.fr>          #+#  +:+       +#+        */
+/*   By: clouaint <clouaint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-27 13:31:14 by clouaint          #+#    #+#             */
-/*   Updated: 2024-11-27 13:31:14 by clouaint         ###   ########.fr       */
+/*   Created: 2024/11/27 13:31:14 by clouaint          #+#    #+#             */
+/*   Updated: 2024/12/02 17:58:05 by clouaint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,48 @@
 
 void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->forks[philo->id - 1]);
-	pthread_mutex_lock(&philo->table->print);
-	printf("%lld %d has taken a fork\n", get_time() - philo->table->start, philo->id);
-	pthread_mutex_unlock(&philo->table->print);
-	pthread_mutex_lock(&philo->table->forks[philo->id % philo->table->philo_count]);
-	pthread_mutex_lock(&philo->table->print);
-	printf("%lld %d has taken a fork\n", get_time() - philo->table->start, philo->id);
-	pthread_mutex_unlock(&philo->table->print);
+    if (philo->table->dead)
+        return;
+
+    int first_fork = philo->id - 1;
+    int second_fork = philo->id % philo->table->philo_count;
+
+    if (philo->id % 2 == 0)
+    {
+        pthread_mutex_lock(&philo->table->forks[second_fork]);
+        pthread_mutex_lock(&philo->table->forks[first_fork]);
+    }
+    else
+    {
+        pthread_mutex_lock(&philo->table->forks[first_fork]);
+        pthread_mutex_lock(&philo->table->forks[second_fork]);
+    }
+    action_print(philo->table, philo->id, "has taken a fork");
+    action_print(philo->table, philo->id, "has taken a fork");
 }
 
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->print);
-	printf("%lld %d is eating\n", get_time() - philo->table->start, philo->id);
-	pthread_mutex_unlock(&philo->table->print);
-	philo->last_eat = get_time();
-	philo->eat_count++;
-	usleep(philo->table->time_to_eat * 1000);
+    if (philo->table->dead)
+        return;
+    action_print(philo->table, philo->id, "is eating");
+    pthread_mutex_lock(&philo->table->dead_lock); // Protection de last_eat
+    philo->last_eat = get_time();
+    pthread_mutex_unlock(&philo->table->dead_lock);
+    philo->eat_count++;
+    precise_usleep(philo->table->time_to_eat, philo->table);
 }
 
 void	put_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
-	pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->philo_count]);
+    pthread_mutex_unlock(&philo->table->forks[philo->id - 1]);
+    pthread_mutex_unlock(&philo->table->forks[philo->id % philo->table->philo_count]);
 }
 
 void	ft_sleep(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->print);
-	printf("%lld %d is sleeping\n", get_time() - philo->table->start, philo->id);
-	pthread_mutex_unlock(&philo->table->print);
-	usleep(philo->table->time_to_sleep * 1000);
+	if (philo->table->dead)
+        return;
+	action_print(philo->table, philo->id, "is sleeping");
+	precise_usleep(philo->table->time_to_sleep, philo->table);
 }
