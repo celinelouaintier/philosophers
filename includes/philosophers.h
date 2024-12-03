@@ -24,7 +24,7 @@ typedef struct s_table
     int				time_to_sleep;
     int				must_eat;
     int				dead;
-    int				start;
+    long long		start;
     pthread_mutex_t dead_lock;
     pthread_mutex_t	*forks;
     pthread_mutex_t	print;

@@ -14,9 +14,10 @@
 
 void	*monitor(void *arg)
 {
-    t_table *table = (t_table *)arg;
-    int i;
+    t_table	*table;
+    int		i;
 
+	table = (t_table *)arg;
     while (1)
     {
         i = 0;
@@ -44,15 +45,8 @@ void	*routine(void *arg)
 
     if (philo->id % 2)
         usleep(15000);
-    while (1)
+    while (!philo->table->dead && philo->table->must_eat != philo->eat_count)
     {
-        pthread_mutex_lock(&philo->table->dead_lock);
-        if (philo->table->dead)
-        {
-            pthread_mutex_unlock(&philo->table->dead_lock);
-            break;
-        }
-        pthread_mutex_unlock(&philo->table->dead_lock);
         take_forks(philo);
         eat(philo);
         put_forks(philo);
@@ -65,9 +59,9 @@ void	*routine(void *arg)
 
 int	start_simulation(t_table *table)
 {
-    int i;
-    pthread_t monitor_t;
-    int ret;
+    int			i;
+    pthread_t	monitor_t;
+    int			ret;
 
     i = 0;
 	table->start = get_time();
@@ -79,19 +73,14 @@ int	start_simulation(t_table *table)
 		table->philos[i].last_eat = get_time();
         i++;
     }
-	usleep(5000);
     ret = pthread_create(&monitor_t, NULL, monitor, table);
     if (ret != 0)
         return (1);
     ret = pthread_join(monitor_t, NULL);
-    if (ret != 0)
-        return (1);
     i = 0;
     while (i < table->philo_count)
     {
         ret = pthread_join(table->philos[i].thread, NULL);
-        if (ret != 0)
-            return (1);
         i++;
     }
     return (0);

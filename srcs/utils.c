@@ -64,7 +64,7 @@ void		action_print(t_table *table, int id, char *string)
 	if (!(table->dead))
 	{
 		printf("%lli ", get_time() - table->start);
-		printf("%i ", id + 1);
+		printf("%i ", id);
 		printf("%s\n", string);
 	}
 	pthread_mutex_unlock(&(table->print));

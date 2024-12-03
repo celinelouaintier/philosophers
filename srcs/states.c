@@ -14,12 +14,13 @@
 
 void	take_forks(t_philo *philo)
 {
-    if (philo->table->dead)
-        return;
+	int first_fork;
+    int second_fork;
 
-    int first_fork = philo->id - 1;
-    int second_fork = philo->id % philo->table->philo_count;
-
+	if (philo->table->dead)
+    	return;
+	first_fork = philo->id - 1;
+	second_fork = philo->id % philo->table->philo_count;
     if (philo->id % 2 == 0)
     {
         pthread_mutex_lock(&philo->table->forks[second_fork]);
@@ -39,9 +40,7 @@ void	eat(t_philo *philo)
     if (philo->table->dead)
         return;
     action_print(philo->table, philo->id, "is eating");
-    pthread_mutex_lock(&philo->table->dead_lock); // Protection de last_eat
     philo->last_eat = get_time();
-    pthread_mutex_unlock(&philo->table->dead_lock);
     philo->eat_count++;
     precise_usleep(philo->table->time_to_eat, philo->table);
 }
