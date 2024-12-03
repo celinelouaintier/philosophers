@@ -25,7 +25,8 @@ typedef struct s_table
     int				must_eat;
     int				dead;
     long long		start;
-    pthread_mutex_t dead_lock;
+    pthread_mutex_t meal_check;
+	pthread_mutex_t	dead_lock;
     pthread_mutex_t	*forks;
     pthread_mutex_t	print;
     t_philo			*philos;
@@ -42,5 +43,7 @@ void		ft_sleep(t_philo *philo);
 int			start_simulation(t_table *table);
 void        precise_usleep(long long time_in_ms, t_table *table);
 void		action_print(t_table *table, int id, char *string);
+void		free_all(t_table *table);
+int			is_dead(t_table *table);
 
 #endif

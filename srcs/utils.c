@@ -50,18 +50,20 @@ long long	get_time(void)
 void precise_usleep(long long time_in_ms, t_table *table)
 {
 	long long start = get_time();
-	while (!table->dead)
+	long long current;
+	while (!is_dead(table))
 	{
-		if (get_time() - start >= time_in_ms)
+		current = get_time();
+		if (current - start >= time_in_ms)
 			break ;
 		usleep(50);
 	}
 }
 
-void		action_print(t_table *table, int id, char *string)
+void	action_print(t_table *table, int id, char *string)
 {
 	pthread_mutex_lock(&(table->print));
-	if (!(table->dead))
+	if (!is_dead(table))
 	{
 		printf("%lli ", get_time() - table->start);
 		printf("%i ", id);

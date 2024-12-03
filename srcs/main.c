@@ -33,6 +33,23 @@ void	print_philos(t_table *table)
 	}
 }
 
+void	free_all(t_table *table)
+{
+	int i;
+
+	i = 0;
+	while (i < table->philo_count)
+	{
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&table->print);
+	pthread_mutex_destroy(&table->meal_check);
+	pthread_mutex_destroy(&table->dead_lock);
+	free(table->forks);
+	free(table->philos);
+}
+
 int main(int ac, char **av)
 {
     t_table table;
@@ -44,6 +61,9 @@ int main(int ac, char **av)
 	// else
 	// 	print_philos(&table);
     if (start_simulation(&table))
+	{
         return (printf("Error: simulation failed\n"));
+		free_all(&table);
+	}
     return (0);
 }

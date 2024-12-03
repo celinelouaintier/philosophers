@@ -33,12 +33,14 @@ static void init_mutex(t_table *table)
 	int	i;
 
 	i = 0;
+	pthread_mutex_init(&table->print, NULL);
+	pthread_mutex_init(&table->meal_check, NULL);
+	pthread_mutex_init(&table->dead_lock, NULL);
 	while (i < table->philo_count)
 	{
 		pthread_mutex_init(&table->forks[i], NULL);
 		i++;
 	}
-	pthread_mutex_init(&table->print, NULL);
 }
 
 static int	init_table(t_table *table, int ac, char **av)
@@ -56,12 +58,10 @@ static int	init_table(t_table *table, int ac, char **av)
 	if (!table->forks)
 		return (1);
 	init_mutex(table);
-	pthread_mutex_init(&table->dead_lock, NULL);
 	table->philos = malloc(sizeof(t_philo) * table->philo_count);
 	if (!table->philos)
 		return (1);
 	init_philos(table);
-	pthread_mutex_destroy(&table->dead_lock);
 	return (0);
 }
 

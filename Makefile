@@ -8,7 +8,7 @@ SRC 	= ${addprefix ${SRCS_DIR}, ${SRCS}}
 OBJS 	= ${SRC:.c=.o}
 
 CC 		= cc
-CFLAGS 	= -Wall -Wextra -Werror -I./includes
+CFLAGS 	= -Wall -Wextra -Werror -g3 -I./includes
 
 
 %.o: %.c
