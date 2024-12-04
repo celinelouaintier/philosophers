@@ -28,7 +28,7 @@ static int	init_philos(t_table *table)
 	return (0);
 }
 
-static void init_mutex(t_table *table)
+static void	init_mutex(t_table *table)
 {
 	int	i;
 

@@ -47,10 +47,12 @@ long long	get_time(void)
 	return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
 }
 
-void precise_usleep(long long time_in_ms, t_table *table)
+void	precise_usleep(long long time_in_ms, t_table *table)
 {
-	long long start = get_time();
-	long long current;
+	long long	start;
+	long long	current;
+
+	start = get_time();
 	while (!is_dead(table))
 	{
 		current = get_time();
