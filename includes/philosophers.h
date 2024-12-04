@@ -56,5 +56,6 @@ void		precise_usleep(long long time_in_ms, t_table *table);
 void		action_print(t_table *table, int id, char *string);
 void		free_all(t_table *table);
 int			is_dead(t_table *table);
+int			has_eaten(t_philo *philo, int i);
 
 #endif

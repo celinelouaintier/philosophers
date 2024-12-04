@@ -74,3 +74,14 @@ void	action_print(t_table *table, int id, char *string)
 	pthread_mutex_unlock(&(table->print));
 	return ;
 }
+
+int	has_eaten(t_philo *philo, int i)
+{
+	pthread_mutex_lock(&philo->table->meal_check);
+	if (philo->table->philos[i].eat_count == philo->table->must_eat)
+	{
+		pthread_mutex_unlock(&philo->table->meal_check);
+		return (1);
+	}
+	return (0);
+}

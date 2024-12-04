@@ -40,17 +40,12 @@ void	*monitor(void *arg)
 		i = 0;
 		while (i < table->philo_count)
 		{
-			pthread_mutex_lock(&table->meal_check);
-			if (table->philos[i].eat_count == table->must_eat)
-			{
-				pthread_mutex_unlock(&table->meal_check);
+			if (has_eaten(&table->philos[i], i))
 				return (NULL);
-			}
 			if (get_time() - table->philos[i].last_eat > table->time_to_die)
 			{
 				action_print(table, table->philos[i].id, "died");
 				set_dead(table);
-				pthread_mutex_unlock(&table->meal_check);
 				return (NULL);
 			}
 			pthread_mutex_unlock(&table->meal_check);
@@ -85,29 +80,24 @@ int	start_simulation(t_table *table)
 {
 	int			i;
 	pthread_t	monitor_t;
-	int			ret;
 
 	i = 0;
 	table->start = get_time();
 	while (i < table->philo_count)
 	{
-		ret = pthread_create(&table->philos[i].thread, NULL,
-				&routine, &table->philos[i]);
-		if (ret != 0)
-			return (1);
+		pthread_create(&table->philos[i].thread, NULL,
+			&routine, &table->philos[i]);
 		pthread_mutex_lock(&table->meal_check);
 		table->philos[i].last_eat = get_time();
 		pthread_mutex_unlock(&table->meal_check);
 		i++;
 	}
-	ret = pthread_create(&monitor_t, NULL, monitor, table);
-	if (ret != 0)
-		return (1);
-	ret = pthread_join(monitor_t, NULL);
+	pthread_create(&monitor_t, NULL, monitor, table);
+	pthread_join(monitor_t, NULL);
 	i = 0;
 	while (i < table->philo_count)
 	{
-		ret = pthread_join(table->philos[i].thread, NULL);
+		pthread_join(table->philos[i].thread, NULL);
 		i++;
 	}
 	free_all(table);
